@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vocabulary Flashcards - Language & Feelings</title>
+    <style>
+        :root {
+            --primary: #8e44ad;
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --text-front: #333333;
+            --text-back: #ffffff;
+        }
+        body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg-color); margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        h1 { color: var(--primary); margin-bottom: 20px; text-align: center; }
+        .flashcard-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; width: 100%; max-width: 1200px; }
+        .flashcard { background-color: transparent; width: 100%; height: 180px; perspective: 1000px; cursor: pointer; }
+        .flashcard-inner { position: relative; width: 100%; height: 100%; text-align: center; transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1); transform-style: preserve-3d; box-shadow: 0 4px 8px rgba(0,0,0,0.1); border-radius: 12px; }
+        .flashcard.flipped .flashcard-inner { transform: rotateY(180deg); }
+        .flashcard-front, .flashcard-back { position: absolute; width: 100%; height: 100%; -webkit-backface-visibility: hidden; backface-visibility: hidden; display: flex; flex-direction: column; justify-content: center; align-items: center; border-radius: 12px; padding: 20px; box-sizing: border-box; }
+        .flashcard-front { background-color: var(--card-bg); color: var(--text-front); border: 2px solid #e1e8ed; }
+        .flashcard-back { background-color: var(--primary); color: var(--text-back); transform: rotateY(180deg); }
+        .flashcard-front h2 { margin: 0; font-size: 1.5em; color: var(--primary); }
+        .flashcard-back h2 { margin: 0; font-size: 1.4em; font-weight: 500; }
+        .category { font-size: 0.8em; color: #888; position: absolute; top: 15px; text-transform: uppercase; letter-spacing: 1px; }
+        .flashcard-back .category { color: rgba(255, 255, 255, 0.7); }
+        .instruction { text-align: center; color: #666; margin-bottom: 20px; font-style: italic; }
+        @media (max-width: 600px) { .flashcard-container { grid-template-columns: repeat(auto-fill, minmax(100%, 1fr)); } }
+    </style>
+</head>
+<body>
+    <h1>Flashcards - Language & Feelings</h1>
+    <p class="instruction">Nhấp vào thẻ để xem nghĩa tiếng Việt</p>
+    <div class="flashcard-container" id="card-container"></div>
+    <script>
+        const vocabulary = [
+            { word: "advanced", meaning: "nâng cao, cấp cao", category: "Language" },
+            { word: "mention", meaning: "đề cập đến", category: "Language" },
+            { word: "argue", meaning: "tranh luận, cãi nhau", category: "Language" },
+            { word: "pronounce", meaning: "phát âm", category: "Language" },
+            { word: "shout", meaning: "hét lên, la hét", category: "Language" },
+            { word: "elementary", meaning: "sơ cấp, cơ bản", category: "Language" },
+            { word: "generous", meaning: "hào phóng", category: "Feelings" },
+            { word: "afraid", meaning: "sợ hãi", category: "Feelings" },
+            { word: "gentle", meaning: "nhẹ nhàng, hiền lành", category: "Feelings" },
+            { word: "guilty", meaning: "có tội, cảm thấy tội lỗi", category: "Feelings" },
+            { word: "amusing", meaning: "vui vẻ, buồn cười", category: "Feelings" },
+            { word: "annoyed", meaning: "bực mình, khó chịu", category: "Feelings" },
+            { word: "anxious", meaning: "lo âu, băn khoăn", category: "Feelings" },
+            { word: "ashamed", meaning: "xấu hổ, thẹn thùng", category: "Feelings" },
+            { word: "awful", meaning: "tồi tệ, kinh khủng", category: "Feelings" },
+            { word: "bored", meaning: "cảm thấy buồn chán", category: "Feelings" },
+            { word: "interested", meaning: "quan tâm, thích thú", category: "Feelings" },
+            { word: "jealous", meaning: "ghen tị", category: "Feelings" },
+            { word: "brave", meaning: "dũng cảm", category: "Feelings" },
+            { word: "keen", meaning: "say mê, thích", category: "Feelings" },
+            { word: "careful", meaning: "cẩn thận", category: "Feelings" },
+            { word: "married", meaning: "đã kết hôn", category: "Feelings" },
+            { word: "cheerful", meaning: "vui vẻ, tươi tắn", category: "Feelings" },
+            { word: "miserable", meaning: "khốn khổ, bất hạnh", category: "Feelings" },
+            { word: "clever", meaning: "khéo léo, thông minh", category: "Feelings" },
+            { word: "negative", meaning: "tiêu cực", category: "Feelings" },
+            { word: "nervous", meaning: "lo lắng, bồn chồn", category: "Feelings" },
+            { word: "confused", meaning: "lúng túng, bối rối", category: "Feelings" },
+            { word: "confusing", meaning: "khó hiểu, gây bối rối", category: "Feelings" },
+            { word: "cruel", meaning: "tàn nhẫn, độc ác", category: "Feelings" },
+            { word: "curious", meaning: "tò mò", category: "Feelings" },
+            { word: "ordinary", meaning: "bình thường, thông thường", category: "Feelings" },
+            { word: "delighted", meaning: "rất vui mừng, hài lòng", category: "Feelings" },
+            { word: "patient", meaning: "kiên nhẫn", category: "Feelings" },
+            { word: "depressed", meaning: "chán nản, trầm cảm", category: "Feelings" },
+            { word: "pleasant", meaning: "dễ chịu, thoải mái", category: "Feelings" },
+            { word: "disappointed", meaning: "cảm thấy thất vọng", category: "Feelings" },
+            { word: "embarrassed", meaning: "xấu hổ, bối rối", category: "Feelings" },
+            { word: "fantastic", meaning: "tuyệt vời, kỳ diệu", category: "Feelings" },
+            { word: "rude", meaning: "thô lỗ, bất lịch sự", category: "Feelings" },
+            { word: "satisfied", meaning: "cảm thấy hài lòng", category: "Feelings" },
+            { word: "frightened", meaning: "hoảng sợ", category: "Feelings" },
+            { word: "terrible", meaning: "tồi tệ, khủng khiếp", category: "Feelings" },
+            { word: "strange", meaning: "kỳ lạ, xa lạ", category: "Feelings" },
+            { word: "unusual", meaning: "bất thường, khác thường", category: "Feelings" }
+        ];
+        const container = document.getElementById('card-container');
+        vocabulary.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'flashcard';
+            card.innerHTML = `
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <span class="category">${item.category}</span>
+                        <h2>${item.word}</h2>
+                    </div>
+                    <div class="flashcard-back">
+                        <span class="category">${item.category}</span>
+                        <h2>${item.meaning}</h2>
+                    </div>
+                </div>
+            `;
+            card.addEventListener('click', function() { this.classList.toggle('flipped'); });
+            container.appendChild(card);
+        });
+    </script>
+</body>
+</html>

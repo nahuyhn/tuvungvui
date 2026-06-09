@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flashcard Nghề Nghiệp & Công Việc</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            color: #333;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 400px;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .header h2 {
+            margin: 0 0 10px 0;
+            color: #1a73e8;
+        }
+
+        .counter {
+            font-weight: bold;
+            color: #5f6368;
+        }
+
+        /* Flashcard Styles */
+        .flashcard-container {
+            perspective: 1000px;
+            width: 100%;
+            height: 250px;
+            margin-bottom: 30px;
+            cursor: pointer;
+        }
+
+        .flashcard {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            border-radius: 15px;
+        }
+
+        .flashcard.is-flipped {
+            transform: rotateX(180deg);
+        }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: 15px;
+            background-color: white;
+            padding: 20px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        .card-front {
+            border-bottom: 5px solid #1a73e8;
+        }
+
+        .card-back {
+            background-color: #e8f0fe;
+            transform: rotateX(180deg);
+            border-bottom: 5px solid #34a853;
+        }
+
+        .word {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #202124;
+        }
+
+        .ipa {
+            font-size: 18px;
+            color: #5f6368;
+            font-style: italic;
+        }
+
+        .meaning {
+            font-size: 28px;
+            font-weight: bold;
+            color: #188038;
+        }
+
+        .instruction {
+            font-size: 12px;
+            color: #9aa0a6;
+            margin-top: auto;
+        }
+
+        /* Controls */
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        button {
+            background-color: #1a73e8;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background-color: #1557b0;
+        }
+
+        button:disabled {
+            background-color: #dadce0;
+            cursor: not-allowed;
+            color: #80868b;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <h2>Học Từ Vựng</h2>
+            <div class="counter"><span id="current-count">1</span> / <span id="total-count">30</span></div>
+        </div>
+
+        <div class="flashcard-container" onclick="flipCard()">
+            <div class="flashcard" id="flashcard">
+                <div class="card-face card-front">
+                    <div class="word" id="en-word">Word</div>
+                    <div class="ipa" id="ipa-text">/ipa/</div>
+                    <div class="instruction">Nhấp để lật thẻ</div>
+                </div>
+                <div class="card-face card-back">
+                    <div class="meaning" id="vi-meaning">Nghĩa</div>
+                    <div class="instruction">Nhấp để lật thẻ</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button id="prev-btn" onclick="prevCard()">&#8592; Quay lại</button>
+            <button id="next-btn" onclick="nextCard()">Tiếp theo &#8594;</button>
+        </div>
+    </div>
+
+    <script>
+        const flashcards = [
+            { en: "Architect", ipa: "/ˈɑːrkɪtekt/", vi: "Kiến trúc sư" },
+            { en: "Athlete", ipa: "/ˈæθliːt/", vi: "Vận động viên" },
+            { en: "Butcher", ipa: "/ˈbʊtʃər/", vi: "Người bán thịt" },
+            { en: "Chemist", ipa: "/ˈkemɪst/", vi: "Dược sĩ, nhà hóa học" },
+            { en: "Colleague", ipa: "/ˈkɑːliːɡ/", vi: "Đồng nghiệp" },
+            { en: "Conference", ipa: "/ˈkɑːnfərəns/", vi: "Hội nghị" },
+            { en: "Employee", ipa: "/ɪmˈplɔɪiː/", vi: "Người lao động, nhân viên" },
+            { en: "Employer", ipa: "/ɪmˈplɔɪər/", vi: "Chủ lao động" },
+            { en: "Employment", ipa: "/ɪmˈplɔɪmənt/", vi: "Việc làm" },
+            { en: "Guard", ipa: "/ɡɑːrd/", vi: "Người canh gác, bảo vệ" },
+            { en: "Hairdresser", ipa: "/ˈherdresər/", vi: "Thợ làm tóc" },
+            { en: "Housewife", ipa: "/ˈhaʊswaɪf/", vi: "Bà nội trợ" },
+            { en: "Instructions", ipa: "/ɪnˈstrʌkʃənz/", vi: "Lời hướng dẫn" },
+            { en: "Instructor", ipa: "/ɪnˈstrʌktər/", vi: "Người hướng dẫn" },
+            { en: "Judge", ipa: "/dʒʌdʒ/", vi: "Thẩm phán, giám khảo" },
+            { en: "Laboratory", ipa: "/ˈlæbrətɔːri/", vi: "Phòng thí nghiệm" },
+            { en: "Lecturer", ipa: "/ˈlektʃərər/", vi: "Giảng viên" },
+            { en: "Occupation", ipa: "/ˌɑːkjuˈpeɪʃn/", vi: "Nghề nghiệp" },
+            { en: "Out of work", ipa: "/aʊt əv wɜːrk/", vi: "Thất nghiệp" },
+            { en: "Painter", ipa: "/ˈpeɪntər/", vi: "Họa sĩ, thợ sơn" },
+            { en: "Poet", ipa: "/ˈpoʊət/", vi: "Nhà thơ" },
+            { en: "Politician", ipa: "/ˌpɑːləˈtɪʃn/", vi: "Chính trị gia" },
+            { en: "Postman", ipa: "/ˈpoʊstmən/", vi: "Người đưa thư" },
+            { en: "Receptionist", ipa: "/rɪˈsepʃənɪst/", vi: "Nhân viên lễ tân" },
+            { en: "Retirement", ipa: "/rɪˈtaɪərmənt/", vi: "Sự nghỉ hưu" },
+            { en: "Secretary", ipa: "/ˈsekrəteri/", vi: "Thư ký" },
+            { en: "Unemployed", ipa: "/ˌʌnɪmˈplɔɪd/", vi: "Thất nghiệp" },
+            { en: "Wage", ipa: "/weɪdʒ/", vi: "Tiền công" },
+            { en: "Waiter", ipa: "/ˈweɪtər/", vi: "Bồi bàn nam" },
+            { en: "Waitress", ipa: "/ˈweɪtrəs/", vi: "Bồi bàn nữ" }
+        ];
+
+        let currentIndex = 0;
+
+        const cardElement = document.getElementById('flashcard');
+        const enWord = document.getElementById('en-word');
+        const ipaText = document.getElementById('ipa-text');
+        const viMeaning = document.getElementById('vi-meaning');
+        const currentCountText = document.getElementById('current-count');
+        const totalCountText = document.getElementById('total-count');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+
+        function init() {
+            totalCountText.textContent = flashcards.length;
+            updateCard();
+        }
+
+        function updateCard() {
+            // Remove flip class if present
+            cardElement.classList.remove('is-flipped');
+            
+            // Wait for flip animation to reset before changing text
+            setTimeout(() => {
+                const card = flashcards[currentIndex];
+                enWord.textContent = card.en;
+                ipaText.textContent = card.ipa;
+                viMeaning.textContent = card.vi;
+                currentCountText.textContent = currentIndex + 1;
+                
+                // Update button states
+                prevBtn.disabled = currentIndex === 0;
+                nextBtn.disabled = currentIndex === flashcards.length - 1;
+            }, 150);
+        }
+
+        function flipCard() {
+            cardElement.classList.toggle('is-flipped');
+        }
+
+        function nextCard() {
+            if (currentIndex < flashcards.length - 1) {
+                currentIndex++;
+                updateCard();
+            }
+        }
+
+        function prevCard() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                updateCard();
+            }
+        }
+
+        // Initialize on load
+        init();
+    </script>
+</body>
+</html>

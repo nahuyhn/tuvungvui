@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flashcard Thiên Nhiên & Du Lịch</title>
+    <title>Flashcard Nghề Nghiệp & Công Việc</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f0f7f4;
+            background-color: #f0f2f5;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -19,32 +19,31 @@
 
         .container {
             width: 100%;
-            max-width: 450px;
+            max-width: 400px;
             padding: 20px;
             box-sizing: border-box;
         }
 
         .header {
             text-align: center;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
 
         .header h2 {
             margin: 0 0 10px 0;
-            color: #00897b;
+            color: #1a73e8;
         }
 
         .counter {
             font-weight: bold;
-            color: #546e7a;
-            font-size: 16px;
+            color: #5f6368;
         }
 
         /* Flashcard Styles */
         .flashcard-container {
             perspective: 1000px;
             width: 100%;
-            height: 260px;
+            height: 250px;
             margin-bottom: 30px;
             cursor: pointer;
         }
@@ -53,14 +52,14 @@
             width: 100%;
             height: 100%;
             position: relative;
-            transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
+            transition: transform 0.6s;
             transform-style: preserve-3d;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-            border-radius: 20px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            border-radius: 15px;
         }
 
         .flashcard.is-flipped {
-            transform: rotateY(180deg);
+            transform: rotateX(180deg);
         }
 
         .card-face {
@@ -72,47 +71,46 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            border-radius: 20px;
+            border-radius: 15px;
+            background-color: white;
             padding: 20px;
             box-sizing: border-box;
             text-align: center;
         }
 
         .card-front {
-            background-color: #ffffff;
-            border-bottom: 6px solid #00897b;
+            border-bottom: 5px solid #1a73e8;
         }
 
         .card-back {
-            background-color: #e0f2f1;
-            transform: rotateY(180deg);
-            border-bottom: 6px solid #0277bd;
+            background-color: #e8f0fe;
+            transform: rotateX(180deg);
+            border-bottom: 5px solid #34a853;
         }
 
         .word {
-            font-size: 34px;
-            font-weight: 700;
+            font-size: 32px;
+            font-weight: bold;
             margin-bottom: 15px;
-            color: #263238;
+            color: #202124;
         }
 
         .ipa {
-            font-size: 20px;
-            color: #546e7a;
+            font-size: 18px;
+            color: #5f6368;
             font-style: italic;
         }
 
         .meaning {
-            font-size: 30px;
-            font-weight: 700;
-            color: #01579b;
+            font-size: 28px;
+            font-weight: bold;
+            color: #188038;
         }
 
         .instruction {
-            font-size: 13px;
-            color: #90a4ae;
-            position: absolute;
-            bottom: 20px;
+            font-size: 12px;
+            color: #9aa0a6;
+            margin-top: auto;
         }
 
         /* Controls */
@@ -120,31 +118,28 @@
             display: flex;
             justify-content: space-between;
             width: 100%;
-            gap: 15px;
         }
 
         button {
-            flex: 1;
-            background-color: #00897b;
+            background-color: #1a73e8;
             color: white;
             border: none;
-            padding: 14px 20px;
+            padding: 12px 24px;
             font-size: 16px;
-            border-radius: 10px;
+            border-radius: 8px;
             cursor: pointer;
-            transition: all 0.2s;
-            font-weight: 600;
+            transition: background-color 0.2s;
+            font-weight: bold;
         }
 
-        button:hover:not(:disabled) {
-            background-color: #00695c;
-            transform: translateY(-2px);
+        button:hover {
+            background-color: #1557b0;
         }
 
         button:disabled {
-            background-color: #cfd8dc;
+            background-color: #dadce0;
             cursor: not-allowed;
-            color: #78909c;
+            color: #80868b;
         }
         /* ==========================================================================
    GIAO DIỆN DÀNH CHO MÀN HÌNH ĐIỆN THOẠI (Mobile) - Max width 480px
@@ -196,8 +191,8 @@
 
     <div class="container">
         <div class="header">
-            <h2>Thiên Nhiên & Du Lịch</h2>
-            <div class="counter"><span id="current-count">1</span> / <span id="total-count">0</span></div>
+            <h2>Học Từ Vựng</h2>
+            <div class="counter"><span id="current-count">1</span> / <span id="total-count">30</span></div>
         </div>
 
         <div class="flashcard-container" onclick="flipCard()">
@@ -205,11 +200,11 @@
                 <div class="card-face card-front">
                     <div class="word" id="en-word">Word</div>
                     <div class="ipa" id="ipa-text">/ipa/</div>
-                    <div class="instruction">Nhấp vào thẻ để xem nghĩa</div>
+                    <div class="instruction">Nhấp để lật thẻ</div>
                 </div>
                 <div class="card-face card-back">
                     <div class="meaning" id="vi-meaning">Nghĩa</div>
-                    <div class="instruction">Nhấp vào thẻ để xem từ</div>
+                    <div class="instruction">Nhấp để lật thẻ</div>
                 </div>
             </div>
         </div>
@@ -222,43 +217,36 @@
 
     <script>
         const flashcards = [
-            { en: "Abroad", ipa: "/əˈbrɔːd/", vi: "Ở nước ngoài" },
-            { en: "Accommodation", ipa: "/əˌkɑː.məˈdeɪ.ʃən/", vi: "Chỗ ở" },
-            { en: "Announcement", ipa: "/əˈnaʊns.mənt/", vi: "Thông báo" },
-            { en: "Appointment", ipa: "/əˈpɔɪnt.mənt/", vi: "Cuộc hẹn" },
-            { en: "Arrival", ipa: "/əˈraɪ.vəl/", vi: "Sự đến nơi" },
-            { en: "Backpack", ipa: "/ˈbæk.pæk/", vi: "Ba-lô" },
-            { en: "Baggage", ipa: "/ˈbæɡ.ɪdʒ/", vi: "Hành lý" },
-            { en: "Canal", ipa: "/kəˈnæl/", vi: "Kênh đào" },
-            { en: "Charter", ipa: "/ˈtʃɑːr.t̬ɚ/", vi: "Thuê bao (chuyến bay, tàu)" },
-            { en: "Cliff", ipa: "/klɪf/", vi: "Vách đá" },
-            { en: "Climate", ipa: "/ˈklaɪ.mət/", vi: "Khí hậu" },
-            { en: "Coast", ipa: "/koʊst/", vi: "Bờ biển" },
-            { en: "Continent", ipa: "/ˈkɑːn.t̬ən.ənt/", vi: "Lục địa" },
-            { en: "Desert", ipa: "/ˈdez.ɚt/", vi: "Sa mạc" },
-            { en: "Dessert", ipa: "/dɪˈzɝːt/", vi: "Món tráng miệng" },
-            { en: "East", ipa: "/iːst/", vi: "Hướng đông" },
-            { en: "Explore", ipa: "/ɪkˈsplɔːr/", vi: "Khám phá" },
-            { en: "Farmland", ipa: "/ˈfɑːrm.lænd/", vi: "Đất nông nghiệp" },
-            { en: "Flood", ipa: "/flʌd/", vi: "Lũ lụt" },
-            { en: "Fur", ipa: "/fɝː/", vi: "Lông thú" },
-            { en: "Giraffe", ipa: "/dʒɪˈræf/", vi: "Hươu cao cổ" },
-            { en: "Grow", ipa: "/ɡroʊ/", vi: "Mọc, phát triển, trồng trọt" },
-            { en: "Hill", ipa: "/hɪl/", vi: "Ngọn đồi" },
-            { en: "Mosquito", ipa: "/məˈskiː.t̬oʊ/", vi: "Con muỗi" },
-            { en: "Parrot", ipa: "/ˈper.ət/", vi: "Con vẹt" },
-            { en: "Penguin", ipa: "/ˈpeŋ.ɡwɪn/", vi: "Chim cánh cụt" },
-            { en: "Planet", ipa: "/ˈplæn.ɪt/", vi: "Hành tinh" },
-            { en: "Pollution", ipa: "/pəˈluː.ʃən/", vi: "Sự ô nhiễm" },
-            { en: "Rainforest", ipa: "/ˈreɪn.fɔːr.ɪst/", vi: "Rừng mưa nhiệt đới" },
-            { en: "Sand", ipa: "/sænd/", vi: "Cát" },
-            { en: "Scenery", ipa: "/ˈsiː.nɚ.i/", vi: "Phong cảnh" },
-            { en: "Valley", ipa: "/ˈvæl.i/", vi: "Thung lũng" },
-            { en: "Waterfall", ipa: "/ˈwɑː.t̬ɚ.fɑːl/", vi: "Thác nước" },
-            { en: "Waves", ipa: "/weɪvz/", vi: "Những cơn sóng" },
-            { en: "Weekday", ipa: "/ˈwiːk.deɪ/", vi: "Ngày trong tuần" },
-            { en: "Wildlife", ipa: "/ˈwaɪld.laɪf/", vi: "Động thực vật hoang dã" },
-            { en: "Zebra", ipa: "/ˈziː.brə/", vi: "Ngựa vằn" }
+            { en: "Architect", ipa: "/ˈɑːrkɪtekt/", vi: "Kiến trúc sư" },
+            { en: "Athlete", ipa: "/ˈæθliːt/", vi: "Vận động viên" },
+            { en: "Butcher", ipa: "/ˈbʊtʃər/", vi: "Người bán thịt" },
+            { en: "Chemist", ipa: "/ˈkemɪst/", vi: "Dược sĩ, nhà hóa học" },
+            { en: "Colleague", ipa: "/ˈkɑːliːɡ/", vi: "Đồng nghiệp" },
+            { en: "Conference", ipa: "/ˈkɑːnfərəns/", vi: "Hội nghị" },
+            { en: "Employee", ipa: "/ɪmˈplɔɪiː/", vi: "Người lao động, nhân viên" },
+            { en: "Employer", ipa: "/ɪmˈplɔɪər/", vi: "Chủ lao động" },
+            { en: "Employment", ipa: "/ɪmˈplɔɪmənt/", vi: "Việc làm" },
+            { en: "Guard", ipa: "/ɡɑːrd/", vi: "Người canh gác, bảo vệ" },
+            { en: "Hairdresser", ipa: "/ˈherdresər/", vi: "Thợ làm tóc" },
+            { en: "Housewife", ipa: "/ˈhaʊswaɪf/", vi: "Bà nội trợ" },
+            { en: "Instructions", ipa: "/ɪnˈstrʌkʃənz/", vi: "Lời hướng dẫn" },
+            { en: "Instructor", ipa: "/ɪnˈstrʌktər/", vi: "Người hướng dẫn" },
+            { en: "Judge", ipa: "/dʒʌdʒ/", vi: "Thẩm phán, giám khảo" },
+            { en: "Laboratory", ipa: "/ˈlæbrətɔːri/", vi: "Phòng thí nghiệm" },
+            { en: "Lecturer", ipa: "/ˈlektʃərər/", vi: "Giảng viên" },
+            { en: "Occupation", ipa: "/ˌɑːkjuˈpeɪʃn/", vi: "Nghề nghiệp" },
+            { en: "Out of work", ipa: "/aʊt əv wɜːrk/", vi: "Thất nghiệp" },
+            { en: "Painter", ipa: "/ˈpeɪntər/", vi: "Họa sĩ, thợ sơn" },
+            { en: "Poet", ipa: "/ˈpoʊət/", vi: "Nhà thơ" },
+            { en: "Politician", ipa: "/ˌpɑːləˈtɪʃn/", vi: "Chính trị gia" },
+            { en: "Postman", ipa: "/ˈpoʊstmən/", vi: "Người đưa thư" },
+            { en: "Receptionist", ipa: "/rɪˈsepʃənɪst/", vi: "Nhân viên lễ tân" },
+            { en: "Retirement", ipa: "/rɪˈtaɪərmənt/", vi: "Sự nghỉ hưu" },
+            { en: "Secretary", ipa: "/ˈsekrəteri/", vi: "Thư ký" },
+            { en: "Unemployed", ipa: "/ˌʌnɪmˈplɔɪd/", vi: "Thất nghiệp" },
+            { en: "Wage", ipa: "/weɪdʒ/", vi: "Tiền công" },
+            { en: "Waiter", ipa: "/ˈweɪtər/", vi: "Bồi bàn nam" },
+            { en: "Waitress", ipa: "/ˈweɪtrəs/", vi: "Bồi bàn nữ" }
         ];
 
         let currentIndex = 0;
@@ -278,8 +266,10 @@
         }
 
         function updateCard() {
+            // Remove flip class if present
             cardElement.classList.remove('is-flipped');
             
+            // Wait for flip animation to reset before changing text
             setTimeout(() => {
                 const card = flashcards[currentIndex];
                 enWord.textContent = card.en;
@@ -287,9 +277,10 @@
                 viMeaning.textContent = card.vi;
                 currentCountText.textContent = currentIndex + 1;
                 
+                // Update button states
                 prevBtn.disabled = currentIndex === 0;
                 nextBtn.disabled = currentIndex === flashcards.length - 1;
-            }, 200);
+            }, 150);
         }
 
         function flipCard() {
@@ -310,6 +301,7 @@
             }
         }
 
+        // Initialize on load
         init();
     </script>
 </body>

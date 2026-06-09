@@ -27,6 +27,50 @@
         .flashcard-back .category { color: rgba(255, 255, 255, 0.7); }
         .instruction { text-align: center; color: #666; margin-bottom: 20px; font-style: italic; }
         @media (max-width: 600px) { .flashcard-container { grid-template-columns: repeat(auto-fill, minmax(100%, 1fr)); } }
+        /* ==========================================================================
+   GIAO DIỆN DÀNH CHO MÀN HÌNH ĐIỆN THOẠI (Mobile) - Max width 480px
+   ========================================================================== */
+@media screen and (max-width: 480px) {
+    
+    /* 1. Tối ưu lại container chứa nội dung */
+    .container {
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 15px !important; /* Thu nhỏ padding để tăng không gian hiển thị */
+        margin: 0 auto;
+        box-shadow: none !important; /* Bỏ bóng đổ cho nhẹ máy và thoáng màn hình */
+        border: none !important; /* Bỏ viền nếu cần thiết */
+    }
+
+    /* 2. Ép các lưới (Grid) hoặc hàng (Flexbox) về dạng 1 cột dọc */
+    .menu-grid, .grid-layout, .row {
+        display: grid !important;
+        grid-template-columns: 1fr !important; /* Chuyển thành 1 cột duy nhất */
+        gap: 12px !important;
+    }
+
+    /* 3. Điều chỉnh lại kích thước chữ (Font size) cho vừa mắt trên phone */
+    h1 {
+        font-size: 20px !important; /* Giảm size tiêu đề chính */
+        margin-bottom: 8px !important;
+    }
+
+    h2 {
+        font-size: 18px !important;
+    }
+
+    p, span, a {
+        font-size: 14px !important; /* Size chữ body chuẩn trên mobile */
+    }
+
+    /* 4. Tối ưu hóa các nút bấm (Button / Link) cho dễ chạm bằng ngón tay */
+    .btn-link, button, .button {
+        padding: 12px !important; /* Không gian vừa đủ để ngón tay dễ ấn */
+        font-size: 15px !important;
+        width: 100%; /* Cho nút trải dài hết chiều ngang màn hình */
+        box-sizing: border-box;
+    }
+}
     </style>
 </head>
 <body>

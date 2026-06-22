@@ -3,102 +3,619 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Menu Quản Lý Dự Án</title>
+    <title>100 Từ Vựng Tiếng Anh Thông Dụng - Flashcards</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-light: #eeebff;
+            --primary-dark: #3730a3;
+            --secondary: #0ea5e9;
+            --bg-main: #f8fafc;
+            --bg-card: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --success: #10b981;
+            --radius-lg: 24px;
+            --radius-md: 16px;
+            --radius-sm: 12px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --shadow-md: 0 10px 25px -5px rgba(79, 70, 229, 0.1), 0 8px 10px -6px rgba(79, 70, 229, 0.1);
+            --shadow-card: 0 20px 40px -15px rgba(15, 23, 42, 0.08);
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Plus Jakarta Sans', sans-serif;
         }
 
         body {
-            background-color: #0d1117; /* Màu nền dark mode giống GitHub */
-            color: #c9d1d9;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            background-color: var(--bg-main);
+            color: var(--text-main);
             min-height: 100vh;
-            padding: 20px;
-        }
-
-        .container {
-            background-color: #161b22;
-            border: 1px solid #30363d;
-            border-radius: 8px;
-            padding: 30px;
-            width: 100%;
-            max-width: 600px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-        }
-
-        h1 {
-            text-align: center;
-            margin-bottom: 10px;
-            font-size: 24px;
-            color: #58a6ff;
-        }
-
-        p.subtitle {
-            text-align: center;
-            color: #8b949e;
-            margin-bottom: 25px;
-            font-size: 14px;
-        }
-
-        .menu-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-            gap: 15px;
-        }
-
-        .btn-link {
             display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem 1rem;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+            max-width: 600px;
+        }
+
+        header h1 {
+            font-size: 2.2rem;
+            color: var(--text-main);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+
+        /* Tabs Navigation */
+        .tabs-container {
+            display: flex;
+            background: #e2e8f0;
+            padding: 0.4rem;
+            border-radius: var(--radius-md);
+            margin-bottom: 2.5rem;
+            width: 100%;
+            max-width: 650px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.03);
+        }
+
+        .tab-btn {
+            flex: 1;
+            border: none;
+            background: transparent;
+            padding: 0.8rem 1rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            cursor: pointer;
+            border-radius: var(--radius-sm);
+            transition: var(--transition);
+            text-align: center;
+        }
+
+        .tab-btn.active {
+            background: var(--bg-card);
+            color: var(--primary);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.12);
+        }
+
+        /* Main Workspace */
+        .workspace {
+            width: 100%;
+            max-width: 550px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Flashcard Container */
+        .flashcard-wrapper {
+            perspective: 1000px;
+            width: 100%;
+            height: 320px;
+            cursor: pointer;
+            margin-bottom: 2rem;
+        }
+
+        .flashcard {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-card);
+        }
+
+        .flashcard.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: var(--radius-lg);
+            display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 15px;
-            background-color: #21262d;
-            color: #c9d1d9;
-            text-decoration: none;
-            border: 1px solid #30363d;
-            border-radius: 6px;
-            font-weight: 600;
-            transition: all 0.2s ease-in-out;
+            padding: 2.5rem;
             text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.8);
         }
 
-        /* Hiệu ứng khi rê chuột vào nút */
-        .btn-link:hover {
-            background-color: #30363d;
-            border-color: #8b949e;
+        .card-front {
+            background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
+            color: var(--text-main);
+        }
+
+        .card-back {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            transform: rotateY(180deg);
+        }
+
+        .card-topic {
+            position: absolute;
+            top: 1.5rem;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+        }
+
+        .card-front .card-topic {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .card-back .card-topic {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .card-word {
+            font-size: 2.4rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            word-break: break-word;
+        }
+
+        .card-front .card-word {
+            color: var(--text-main);
+        }
+
+        .card-back .card-word {
             color: #ffffff;
+        }
+
+        .card-hint {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-top: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card-back .card-hint {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Controls */
+        .controls {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            margin-bottom: 2rem;
+            gap: 1rem;
+        }
+
+        .btn {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 0.9rem 1.5rem;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--text-main);
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.95rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn:hover {
+            background: var(--primary-light);
+            color: var(--primary);
+            border-color: var(--primary-light);
             transform: translateY(-2px);
         }
 
-        /* Hiệu ứng khi click */
-        .btn-link:active {
+        .btn:active {
             transform: translateY(0);
+        }
+
+        .progress-text {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            background: #e2e8f0;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+        }
+
+        /* Summary Grid View */
+        .quick-view-section {
+            width: 100%;
+            max-width: 750px;
+            margin-top: 2rem;
+            background: var(--bg-card);
+            padding: 2rem;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-card);
+            border: 1px solid var(--border);
+        }
+
+        .quick-view-section h3 {
+            font-size: 1.2rem;
+            margin-bottom: 1.2rem;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .quick-view-section h3 span {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+
+        .words-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: 0.6rem;
+            max-height: 250px;
+            overflow-y: auto;
+            padding-right: 0.5rem;
+        }
+
+        /* Custom Scrollbar */
+        .words-grid::-webkit-scrollbar {
+            width: 6px;
+        }
+        .words-grid::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 10px;
+        }
+        .words-grid::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+
+        .grid-item {
+            background: var(--bg-main);
+            border: 1px solid var(--border);
+            padding: 0.6rem;
+            border-radius: var(--radius-sm);
+            text-align: center;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .grid-item:hover, .grid-item.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            box-shadow: 0 4px 10px rgba(79, 70, 229, 0.2);
+        }
+
+        @media (max-width: 480px) {
+            header h1 { font-size: 1.8rem; }
+            .flashcard-wrapper { height: 280px; }
+            .card-word { font-size: 2rem; }
+            .tab-btn { font-size: 0.85rem; padding: 0.6rem 0.5rem; }
+            .btn { padding: 0.7rem 1rem; font-size: 0.85rem; }
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h1>DANH SÁCH FILE INDEX</h1>
-        <p class="subtitle">Nhấn vào nút bất kỳ để chuyển hướng đến trang tương ứng</p>
-        
-        <div class="menu-grid">
-            <a href="index1.html" class="btn-link">Index 1</a>
-            <a href="index2.html" class="btn-link">Index 2</a>
-            <a href="index3.html" class="btn-link">Index 3</a>
-            <a href="index4.html" class="btn-link">Index 4</a>
-            <a href="index5.html" class="btn-link">Index 5</a>
-            <a href="index6.html" class="btn-link">Index 6</a>
-            <a href="index7.html" class="btn-link">Index 7</a>
-            <a href="index8.html" class="btn-link">Index 8</a>
-            <a href="index9.html" class="btn-link">Index 9</a>
+    <header>
+        <h1>100 Từ Vựng Thông Dụng</h1>
+        <p>Học từ vựng thông minh qua thẻ Flashcard tương tác chia làm 3 trang bài học</p>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <div class="tabs-container">
+        <button class="tab-btn active" onclick="switchPage(0)">Trang 1 (Từ 1-43)</button>
+        <button class="tab-btn" onclick="switchPage(1)">Trang 2 (Từ 44-67)</button>
+        <button class="tab-btn" onclick="switchPage(2)">Trang 3 (Từ 68-100)</button>
+    </div>
+
+    <!-- Workspace -->
+    <div class="workspace">
+        <!-- Flashcard -->
+        <div class="flashcard-wrapper" onclick="flipCard()">
+            <div class="flashcard" id="card">
+                <!-- Mặt Trước (Tiếng Anh) -->
+                <div class="card-face card-front">
+                    <span class="card-topic" id="card-topic-front">Chủ đề</span>
+                    <div class="card-word" id="card-eng">Word</div>
+                    <div class="card-hint">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+                        Bấm để xem nghĩa tiếng Việt
+                    </div>
+                </div>
+                <!-- Mặt Sau (Tiếng Việt) -->
+                <div class="card-face card-back">
+                    <span class="card-topic" id="card-topic-back">Chủ đề</span>
+                    <div class="card-word" id="card-vie">Ý nghĩa</div>
+                    <div class="card-hint">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+                        Bấm để xem từ gốc
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="controls">
+            <button class="btn" onclick="prevCard(event)">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                Trước đó
+            </button>
+            <span class="progress-text" id="progress">1 / 43</span>
+            <button class="btn" onclick="nextCard(event)">
+                Tiếp theo
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            </button>
         </div>
     </div>
 
+    <!-- Quick View Section -->
+    <div class="quick-view-section">
+        <h3>
+            Danh sách từ vựng trong trang này
+            <span id="grid-count">0 từ</span>
+        </h3>
+        <div class="words-grid" id="words-grid">
+            <!-- Grid items injected dynamically -->
+        </div>
+    </div>
+
+    <script>
+        // Data Structure divided into 3 logical pages based on topics
+        const dataset = [
+            // PAGE 1: Topics 1 & 2 (1 to 43)
+            [
+                { id: 1, topic: "Du lịch & Chỗ ở", eng: "Accommodation", vie: "Chỗ ở" },
+                { id: 2, topic: "Du lịch & Chỗ ở", eng: "Advance (book in advance)", vie: "(Đặt) trước" },
+                { id: 3, topic: "Du lịch & Chỗ ở", eng: "Atmosphere", vie: "Bầu không khí" },
+                { id: 4, topic: "Du lịch & Chỗ ở", eng: "Brochure", vie: "Cuốn sách/tờ quảng cáo nhỏ" },
+                { id: 5, topic: "Du lịch & Chỗ ở", eng: "Cabin crew", vie: "Đội ngũ tiếp viên hàng không" },
+                { id: 6, topic: "Du lịch & Chỗ ở", eng: "Destination", vie: "Điểm đến" },
+                { id: 7, topic: "Du lịch & Chỗ ở", eng: "Excursion", vie: "Chuyến tham quan, dã ngoại" },
+                { id: 8, topic: "Du lịch & Chỗ ở", eng: "Fare", vie: "Giá vé (xe, tàu)" },
+                { id: 9, topic: "Du lịch & Chỗ ở", eng: "Flight", vie: "Chuyến bay" },
+                { id: 10, topic: "Du lịch & Chỗ ở", eng: "Guided tour", vie: "Chuyến tham quan có hướng dẫn viên" },
+                { id: 11, topic: "Du lịch & Chỗ ở", eng: "Journey", vie: "Hành trình" },
+                { id: 12, topic: "Du lịch & Chỗ ở", eng: "Luggage", vie: "Hành lý" },
+                { id: 13, topic: "Du lịch & Chỗ ở", eng: "Passenger", vie: "Hành khách" },
+                { id: 14, topic: "Du lịch & Chỗ ở", eng: "Rent", vie: "Thuê (phòng, xe)" },
+                { id: 15, topic: "Du lịch & Chỗ ở", eng: "Reservation", vie: "Sự đặt chỗ" },
+                { id: 16, topic: "Du lịch & Chỗ ở", eng: "Resort", vie: "Khu nghỉ dưỡng" },
+                { id: 17, topic: "Du lịch & Chỗ ở", eng: "Route", vie: "Tuyến đường" },
+                { id: 18, topic: "Du lịch & Chỗ ở", eng: "Scenery", vie: "Phong cảnh" },
+                { id: 19, topic: "Du lịch & Chỗ ở", eng: "Spectacular", vie: "Đẹp mắt, ngoạn mục" },
+                { id: 20, topic: "Du lịch & Chỗ ở", eng: "Tourist", vie: "Khách du lịch" },
+                { id: 21, topic: "Công việc & Học tập", eng: "Apply (for a job)", vie: "Ứng tuyển" },
+                { id: 22, topic: "Công việc & Học tập", eng: "Career", vie: "Sự nghiệp" },
+                { id: 23, topic: "Công việc & Học tập", eng: "Colleague", vie: "Đồng nghiệp" },
+                { id: 24, topic: "Công việc & Học tập", eng: "Concentrate", vie: "Tập trung" },
+                { id: 25, topic: "Công việc & Học tập", eng: "Course", vie: "Khóa học" },
+                { id: 26, topic: "Công việc & Học tập", eng: "Degree", vie: "Bằng cấp (đại học)" },
+                { id: 27, topic: "Công việc & Học tập", eng: "Experience", vie: "Kinh nghiệm" },
+                { id: 28, topic: "Công việc & Học tập", eng: "Expert", vie: "Chuyên gia" },
+                { id: 29, topic: "Công việc & Học tập", eng: "Improve", vie: "Cải thiện, nâng cao" },
+                { id: 30, topic: "Công việc & Học tập", eng: "Instructor", vie: "Người hướng dẫn" },
+                { id: 31, topic: "Công việc & Học tập", eng: "Interview", vie: "Cuộc phỏng vấn" },
+                { id: 32, topic: "Công việc & Học tập", eng: "Knowledge", vie: "Kiến thức" },
+                { id: 33, topic: "Công việc & Học tập", eng: "Manager", vie: "Người quản lý" },
+                { id: 34, topic: "Công việc & Học tập", eng: "Meeting", vie: "Cuộc họp" },
+                { id: 35, topic: "Công việc & Học tập", eng: "Overtime", vie: "Làm thêm giờ" },
+                { id: 36, topic: "Công việc & Học tập", eng: "Practice", vie: "Luyện tập" },
+                { id: 37, topic: "Công việc & Học tập", eng: "Professional", vie: "Chuyên nghiệp" },
+                { id: 38, topic: "Công việc & Học tập", eng: "Promotion", vie: "Sự thăng tiến" },
+                { id: 39, topic: "Công việc & Học tập", eng: "Qualification", vie: "Trình độ chuyên môn / Bằng cấp" },
+                { id: 40, topic: "Công việc & Học tập", eng: "Salary", vie: "Tiền lương" },
+                { id: 41, topic: "Công việc & Học tập", eng: "Skill", vie: "Kỹ năng" },
+                { id: 42, topic: "Công việc & Học tập", eng: "Staff", vie: "Nhân viên" },
+                { id: 43, topic: "Công việc & Học tập", eng: "Succeed", vie: "Thành công" }
+            ],
+            // PAGE 2: Topics 3 & 4 (44 to 67)
+            [
+                { id: 44, topic: "Sức khỏe & Y tế", eng: "Avoid", vie: "Tránh" },
+                { id: 45, topic: "Sức khỏe & Y tế", eng: "Diet", vie: "Chế độ ăn uống" },
+                { id: 46, topic: "Sức khỏe & Y tế", eng: "Disease / Illness", vie: "Căn bệnh" },
+                { id: 47, topic: "Sức khỏe & Y tế", eng: "Fit / Fitness", vie: "Sự cân đối / Thể dục" },
+                { id: 48, topic: "Sức khỏe & Y tế", eng: "Habit", vie: "Thói quen" },
+                { id: 49, topic: "Sức khỏe & Y tế", eng: "Medicine", vie: "Thuốc" },
+                { id: 50, topic: "Sức khỏe & Y tế", eng: "Pharmacist", vie: "Dược sĩ" },
+                { id: 51, topic: "Sức khỏe & Y tế", eng: "Pill", vie: "Viên thuốc" },
+                { id: 52, topic: "Sức khỏe & Y tế", eng: "Reduce (stress)", vie: "Giảm thiểu (căng thẳng)" },
+                { id: 53, topic: "Sức khỏe & Y tế", eng: "Relax", vie: "Thư giãn" },
+                { id: 54, topic: "Sức khỏe & Y tế", eng: "Stressful", vie: "Căng thẳng, áp lực" },
+                { id: 55, topic: "Sức khỏe & Y tế", eng: "Symptoms", vie: "Triệu chứng" },
+                { id: 56, topic: "Giải trí & Thể thao", eng: "Audience", vie: "Khán giả" },
+                { id: 57, topic: "Giải trí & Thể thao", eng: "Celebrity / Star", vie: "Người nổi tiếng" },
+                { id: 58, topic: "Giải trí & Thể thao", eng: "Confident", vie: "Tự tin" },
+                { id: 59, topic: "Giải trí & Thể thao", eng: "Entertaining", vie: "Có tính giải trí" },
+                { id: 60, topic: "Giải trí & Thể thao", eng: "Exhibition", vie: "Cuộc triển lãm" },
+                { id: 61, topic: "Giải trí & Thể thao", eng: "Gallery", vie: "Phòng trưng bày nghệ thuật" },
+                { id: 62, topic: "Giải trí & Thể thao", eng: "Match", vie: "Trận đấu" },
+                { id: 63, topic: "Giải trí & Thể thao", eng: "Member", vie: "Thành viên" },
+                { id: 64, topic: "Giải trí & Thể thao", eng: "Performance", vie: "Buổi biểu diễn" },
+                { id: 65, topic: "Giải trí & Thể thao", eng: "Stadium", vie: "Sân vận động" },
+                { id: 66, topic: "Giải trí & Thể thao", eng: "Talented", vie: "Có tài năng" },
+                { id: 67, topic: "Giải trí & Thể thao", eng: "Traditional", vie: "Truyền thống" }
+            ],
+            // PAGE 3: Topics 5 & 6 (68 to 100)
+            [
+                { id: 68, topic: "Đời sống & Mua sắm", eng: "Affordable", vie: "Giá cả phải chăng" },
+                { id: 69, topic: "Đời sống & Mua sắm", eng: "Complain", vie: "Phàn nàn" },
+                { id: 70, topic: "Đời sống & Mua sắm", eng: "Customer", vie: "Khách hàng" },
+                { id: 71, topic: "Đời sống & Mua sắm", eng: "Damage", vie: "Gây thiệt hại, làm hỏng" },
+                { id: 72, topic: "Đời sống & Mua sắm", eng: "Discount", vie: "Giảm giá" },
+                { id: 73, topic: "Đời sống & Mua sắm", eng: "Equipment", vie: "Trang thiết bị" },
+                { id: 74, topic: "Đời sống & Mua sắm", eng: "Facility", vie: "Cơ sở vật chất" },
+                { id: 75, topic: "Đời sống & Mua sắm", eng: "Included", vie: "Bao gồm (trong giá)" },
+                { id: 76, topic: "Đời sống & Mua sắm", eng: "Limit", vie: "Giới hạn" },
+                { id: 77, topic: "Đời sống & Mua sắm", eng: "Neighbour", vie: "Hàng xóm" },
+                { id: 78, topic: "Đời sống & Mua sắm", eng: "Notice", vie: "Thông báo" },
+                { id: 79, topic: "Đời sống & Mua sắm", eng: "Offer", vie: "Lời đề nghị / Ưu đãi" },
+                { id: 80, topic: "Đời sống & Mua sắm", eng: "Opportunity", vie: "Cơ hội" },
+                { id: 81, topic: "Đời sống & Mua sắm", eng: "Prefer", vie: "Thích hơn" },
+                { id: 82, topic: "Đời sống & Mua sắm", eng: "Preparation", vie: "Sự chuẩn bị" },
+                { id: 83, topic: "Đời sống & Mua sắm", eng: "Recommend", vie: "Đề xuất, giới thiệu" },
+                { id: 84, topic: "Đời sống & Mua sắm", eng: "Secret", vie: "Bí mật" },
+                { id: 85, topic: "Đời sống & Mua sắm", eng: "Suggest", vie: "Gợi ý" },
+                { id: 86, topic: "Đời sống & Mua sắm", eng: "Volunteer", vie: "Tình nguyện viên" },
+                { id: 87, topic: "Môi trường & Giao thông", eng: "Attract", vie: "Thu hút" },
+                { id: 88, topic: "Môi trường & Giao thông", eng: "Balcony", vie: "Ban công" },
+                { id: 89, topic: "Môi trường & Giao thông", eng: "Cathedral", vie: "Nhà thờ lớn" },
+                { id: 90, topic: "Môi trường & Giao thông", eng: "Environment", vie: "Môi trường" },
+                { id: 91, topic: "Môi trường & Giao thông", eng: "Historical / Heritage", vie: "Thuộc về lịch sử / Di sản" },
+                { id: 92, topic: "Môi trường & Giao thông", eng: "Independence", vie: "Sự độc lập" },
+                { id: 93, topic: "Môi trường & Giao thông", eng: "Museum", vie: "Bảo tàng" },
+                { id: 94, topic: "Môi trường & Giao thông", eng: "Pollution", vie: "Sự ô nhiễm" },
+                { id: 95, topic: "Môi trường & Giao thông", eng: "Temperature", vie: "Nhiệt độ" },
+                { id: 96, topic: "Môi trường & Giao thông", eng: "Transport", vie: "Giao thông, phương tiện" },
+                { id: 97, topic: "Môi trường & Giao thông", eng: "Vehicle", vie: "Phương tiện" },
+                { id: 98, topic: "Môi trường & Giao thông", eng: "Village", vie: "Ngôi làng" },
+                { id: 99, topic: "Môi trường & Giao thông", eng: "Weather", vie: "Thời tiết" },
+                { id: 100, topic: "Môi trường & Giao thông", eng: "Wildlife", vie: "Động vật hoang dã" }
+            ]
+        ];
+
+        let currentPage = 0;
+        let currentCardIndex = 0;
+
+        const cardEl = document.getElementById('card');
+        const engEl = document.getElementById('card-eng');
+        const vieEl = document.getElementById('card-vie');
+        const topicFrontEl = document.getElementById('card-topic-front');
+        const topicBackEl = document.getElementById('card-topic-back');
+        const progressEl = document.getElementById('progress');
+        const gridContainer = document.getElementById('words-grid');
+        const gridCountEl = document.getElementById('grid-count');
+
+        function updateCard() {
+            // Reset flipping state before updating text
+            cardEl.classList.remove('flipped');
+            
+            const currentList = dataset[currentPage];
+            const item = currentList[currentCardIndex];
+
+            // Update content after a short delay if it was flipped to look smooth
+            setTimeout(() => {
+                engEl.textContent = item.eng;
+                vieEl.textContent = item.vie;
+                topicFrontEl.textContent = `Nó. ${item.id} | ${item.topic}`;
+                topicBackEl.textContent = `Nó. ${item.id} | ${item.topic}`;
+                progressEl.textContent = `${currentCardIndex + 1} / ${currentList.length}`;
+                
+                // Update active grid item
+                document.querySelectorAll('.grid-item').forEach((btn, idx) => {
+                    if (idx === currentCardIndex) {
+                        btn.classList.add('active');
+                        btn.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+                    } else {
+                        btn.classList.remove('active');
+                    }
+                });
+            }, 50);
+        }
+
+        function flipCard() {
+            cardEl.classList.toggle('flipped');
+        }
+
+        function nextCard(event) {
+            if (event) event.stopPropagation();
+            const currentList = dataset[currentPage];
+            currentCardIndex = (currentCardIndex + 1) % currentList.length;
+            updateCard();
+        }
+
+        function prevCard(event) {
+            if (event) event.stopPropagation();
+            const currentList = dataset[currentPage];
+            currentCardIndex = (currentCardIndex - 1 + currentList.length) % currentList.length;
+            updateCard();
+        }
+
+        function switchPage(pageIndex) {
+            currentPage = pageIndex;
+            currentCardIndex = 0;
+            
+            // Update active tab style
+            const tabs = document.querySelectorAll('.tab-btn');
+            tabs.forEach((tab, idx) => {
+                if (idx === pageIndex) tab.classList.add('active');
+                else tab.classList.remove('active');
+            });
+
+            // Build grid for quick reference
+            buildGrid();
+            updateCard();
+        }
+
+        function buildGrid() {
+            gridContainer.innerHTML = '';
+            const currentList = dataset[currentPage];
+            gridCountEl.textContent = `${currentList.length} từ`;
+
+            currentList.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = 'grid-item';
+                div.textContent = item.eng.split(' (')[0]; // short version
+                div.title = `${item.eng} : ${item.vie}`;
+                div.onclick = (e) => {
+                    e.stopPropagation();
+                    currentCardIndex = index;
+                    updateCard();
+                };
+                gridContainer.appendChild(div);
+            });
+        }
+
+        // Keyboard Support
+        document.addEventListener('keydown', (e) => {
+            if (e.key === ' ' || e.key === 'Spacebar') {
+                e.preventDefault();
+                flipCard();
+            } else if (e.key === 'ArrowRight') {
+                nextCard();
+            } else if (e.key === 'ArrowLeft') {
+                prevCard();
+            }
+        });
+
+        // Initialize App
+        buildGrid();
+        updateCard();
+    </script>
 </body>
 </html>
